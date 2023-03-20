@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 
 function AddCategory(props) {
   const [categoryName, setCategoryName] = useState("");
@@ -24,8 +25,20 @@ function AddCategory(props) {
           }
         )
         .then((res) => {
-          props.setAddCategory(!props.addCategory);
-          console.log(res);
+          toast.success('Category Added', {
+            position: "top-center",
+            autoClose: 700,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          setTimeout(() => {
+            props.setAddCategory(!props.addCategory);
+          }, 1000);
+          props.setUpdateCategory(!props.updateCategory)
         })
         .catch((err) => console.log(err));
     }
@@ -60,6 +73,8 @@ function AddCategory(props) {
       <Button variant="outlined" type="submit" sx={{ width: "100%", m: 2 }}>
         Save
       </Button>
+      <ToastContainer />
+
     </Box>
   );
 }

@@ -17,4 +17,6 @@ const CategoriesSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+CategoriesSchema.index({ categoryName: 1, createdBy: 1 }, { unique: true });
+
 module.exports = mongoose.model("Categories", CategoriesSchema);

@@ -31,11 +31,10 @@ const FinanceSchema = new mongoose.Schema(
       ],
       enum: ["processing", "completed"],
     },
+
     category: {
       type: Array,
-      default: "default"
-      // need enum to have categoryNames
-      //mosafiqrebelia tu name aris carieli rogor mieces default avtomaturad
+      default: [],
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
@@ -45,5 +44,14 @@ const FinanceSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+FinanceSchema.pre("save", function (next) {
+  if (this.category.length === 0) {
+    this.category = ["Default"];
+  }
+  next();
+});
+
+
 
 module.exports = mongoose.model("Finance", FinanceSchema);

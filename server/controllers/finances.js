@@ -38,26 +38,49 @@ const updateCategory = async (req, res) => {
   if (!category) {
     throw new NotFoundError(`No Category with this ${categoryId}`);
   }
+
   res.status(StatusCodes.OK).json({ category });
 };
 
 const deleteCategory = async (req, res) => {
   const {
     user: { userId },
-    params: { id: categoryId },
+    params: { name: categoryName },
   } = req;
 
-  const category = await Categories.findByIdAndDelete({
-    _id: categoryId,
+  console.log(categoryName,'aaaaaaaaaaaaaaaaaaaaaa')
+  const category = await Categories.findOneAndDelete({
+    categoryName: categoryName,
     createdBy: userId,
   });
 
   if (!category) {
-    throw new NotFoundError(`No Category with this id ${categoryId}`);
+    throw new NotFoundError(`No Category with this id ${categoryName}`);
+  }
+
+  // Get all finances that have the deleted category ID
+  const finances = await Finance.find({ category: categoryName });
+
+  // Update each finance record
+  for (const finance of finances) {
+    const categoryIds = finance.category;
+
+    // Check if the array only contains the deleted category ID
+    if (categoryIds.length === 1 && categoryIds[0] === categoryName) {
+      finance.category = ["Default"];
+    } else {
+      // Remove the deleted category ID from the array
+      const index = categoryIds.indexOf(categoryName);
+      if (index !== -1) {
+        categoryIds.splice(index, 1);
+      }
+      finance.category = categoryIds;
+    }
+
+    await finance.save();
   }
   res.status(StatusCodes.OK).send("Category Has Been Deleted!");
 };
-
 
 const getAllFinances = async (req, res) => {
   const finances = await Finance.find({ createdBy: req.user.userId }).sort(
@@ -89,7 +112,7 @@ const createFinance = async (req, res) => {
 };
 const updateFinance = async (req, res) => {
   const {
-    body: { financeName, description, type, money,},
+    body: { financeName, description, type, money },
     user: { userId },
     params: { id: financeId },
   } = req;
@@ -106,7 +129,7 @@ const updateFinance = async (req, res) => {
   if (!finance) {
     throw new NotFoundError(`No Finance with this id ${financeId}`);
   }
-  res.status(StatusCodes.OK).send("Finance Has Been Updated!").json({ finance });
+  res.status(StatusCodes.OK).json({ finance });
 };
 
 const deleteFinance = async (req, res) => {

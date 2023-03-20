@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { ToastContainer, toast } from "react-toastify";
 import {
   Box,
   TextField,
@@ -66,8 +66,20 @@ function AddFinance(props) {
             }
           )
           .then((res) => {
-            props.setAddFinance(!props.addFinance);
-            console.log(res);
+            toast.success("Category Added", {
+              position: "top-center",
+              autoClose: 700,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            setTimeout(() => {
+              props.setAddFinance(!props.addFinance);
+            }, 1000);
+            props.setUpdateFinance(!props.updateFinance);
           })
           .catch((err) => console.log(err));
       } else {
@@ -88,8 +100,20 @@ function AddFinance(props) {
             }
           )
           .then((res) => {
-            props.setAddFinance(!props.addFinance);
-            console.log(res);
+            toast.success("Category Added", {
+              position: "top-center",
+              autoClose: 700,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            setTimeout(() => {
+              props.setAddFinance(!props.addFinance);
+            }, 1000);
+            props.setUpdateFinance(!props.updateFinance);
           })
           .catch((err) => console.log(err));
       }
@@ -181,7 +205,7 @@ function AddFinance(props) {
           MenuProps={MenuProps}
         >
           {props.myCategories?.map((name, index) => (
-            <MenuItem key={index} value={name.categoryName}>
+            <MenuItem key={index} value={name.categoryName} >
               <Checkbox checked={cName.indexOf(name.categoryName) > -1} />
               <ListItemText primary={name.categoryName} />
             </MenuItem>
@@ -191,6 +215,7 @@ function AddFinance(props) {
       <Button variant="outlined" type="submit" sx={{ mt: 2 }}>
         Save
       </Button>
+      <ToastContainer />
     </Box>
   );
 }

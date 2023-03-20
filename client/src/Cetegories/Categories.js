@@ -1,9 +1,7 @@
 import * as React from "react";
-// import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-// import { counterActions } from "../store/index";
-// import axios from "axios";
 import "./styles/categories.scss";
+import { ToastContainer, toast } from 'react-toastify';
 import {
   Box,
   AppBar,
@@ -29,15 +27,21 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import AllFinance from "./AllFinance/AllFinance";
+import UpdateCategory from "./UpdateCategory/UpdateCategory";
 
 const pages = ["Products", "Pricing", "Blog"];
 
 function Categories() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [myCategories, setMyCategories] = useState([]);
-
   const [addCategory, setAddCategory] = useState(false);
   const [addFinance, setAddFinance] = useState(false);
+  const [updateFinance, setUpdateFinance] = useState(false);
+  const [updateCategory, setUpdateCategory] = useState(false);
+  const [updateCategoryName, setUpdateCategoryName] = useState(false);
+  const [categoryIdForUpdate, setAddCategoryIdForUpdate] = useState("");
+
+
   const navigate = useNavigate();
   let userData = JSON.parse(sessionStorage.user);
   const handleOpenNavMenu = (event) => {
@@ -51,6 +55,43 @@ function Categories() {
     sessionStorage.clear();
     navigate(0);
   };
+  const EditCategory = (e) => {
+    if (e.target.id) {
+      setUpdateCategoryName(!updateCategoryName)
+      setAddCategoryIdForUpdate(e.target.id)
+    }
+  }
+  const DeleteCategory = (e) => {
+    if (e.target.id) {
+      // console.log(e.target.id)
+      axios
+        .delete(
+          `http://localhost:3000/api/v1/finances/categories/${e.target.id}`,
+
+          {
+            headers: {
+              Authorization: "Bearer " + userData.token,
+            },
+          }
+        )
+        .then((res) => {
+          toast.error('Category Deleted', {
+            position: "top-center",
+            autoClose: 700,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          setUpdateCategory(!updateCategory)
+          setUpdateFinance(!updateFinance)
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
 
   useEffect(() => {
     axios
@@ -62,13 +103,14 @@ function Categories() {
       .then((res) => {
         setMyCategories(res.data.categories);
       });
-  }, [addCategory]);
+  }, [updateCategory]);
 
   return (
     <div className="categories">
       <div className="postContainer">
         <AppBar position="static">
           <Container maxWidth="xl">
+            <ToastContainer />
             <Toolbar disableGutters>
               <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
               <Typography
@@ -123,8 +165,9 @@ function Categories() {
                       <Typography textAlign="center">
                         {page.categoryName}
                       </Typography>
-                      <EditIcon fontSize="small" />
-                      <DeleteIcon fontSize="small" />
+                      <EditIcon fontSize="small" onClick={(e) => { EditCategory(e) }} id={page._id} />
+
+                      <DeleteIcon fontSize="small" onClick={(e) => DeleteCategory(e)} id={page.categoryName} />
                     </MenuItem>
                   ))}
                 </Menu>
@@ -162,6 +205,7 @@ function Categories() {
                     >
                       {page.categoryName}
                     </Button>
+
                     <EditIcon
                       className="hoverBG"
                       fontSize="small"
@@ -170,10 +214,16 @@ function Categories() {
                         mt: 2.4,
                         p: 1,
                       }}
+                      id={page._id}
+                      onClick={(e) => { EditCategory(e) }}
                     />
+
                     <DeleteIcon
+                      id={page.categoryName}
+
                       fontSize="small"
                       className="hoverBG"
+                      onClick={(e) => DeleteCategory(e)}
                       sx={{
                         my: 2,
                         mt: 2.4,
@@ -200,7 +250,7 @@ function Categories() {
                 }}
                 variant="contained"
                 endIcon={<AddCircleOutlineIcon />}
-                onClick={(e) => setAddFinance(!addFinance)}
+                onClick={(e) => { setAddFinance(!addFinance) }}
               >
                 Add Finance
               </Button>
@@ -214,10 +264,22 @@ function Categories() {
             </Toolbar>
           </Container>
         </AppBar>
+        {
+          updateCategoryName &&
+          <UpdateCategory categoryIdForUpdate={categoryIdForUpdate} setUpdateCategoryName={setUpdateCategoryName} updateCategoryName={updateCategoryName}
+
+            setUpdateCategory={setUpdateCategory}
+            updateCategory={updateCategory}
+            setUpdateFinance={setUpdateFinance}
+            updateFinance={updateFinance}
+          />
+        }
         {addCategory && (
           <AddCategory
             setAddCategory={setAddCategory}
             addCategory={addCategory}
+            setUpdateCategory={setUpdateCategory}
+            updateCategory={updateCategory}
           />
         )}
 
@@ -226,9 +288,12 @@ function Categories() {
             myCategories={myCategories}
             setAddFinance={setAddFinance}
             addFinance={addFinance}
+            setUpdateFinance={setUpdateFinance}
+            updateFinance={updateFinance}
           />
         )}
-        <AllFinance addFinance={addFinance} />
+        <AllFinance updateFinance={updateFinance} />
+        <ToastContainer />
       </div>
     </div>
   );

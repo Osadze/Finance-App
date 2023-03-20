@@ -61,7 +61,7 @@ function AllFinance(props) {
       .then((res) => {
         setFinances(res.data.finances);
       });
-  }, [props.addFinance]);
+  }, [props.updateFinance]);
 
   return (
     <div style={{ height: 600, width: "100%", marginTop: "40px" }}>
