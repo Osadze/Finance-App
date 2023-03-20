@@ -228,7 +228,7 @@ function Categories() {
             addFinance={addFinance}
           />
         )}
-        <AllFinance />
+        <AllFinance addFinance={addFinance} />
       </div>
     </div>
   );
