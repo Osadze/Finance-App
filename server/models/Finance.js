@@ -33,7 +33,9 @@ const FinanceSchema = new mongoose.Schema(
     },
     category: {
       type: Array,
+      default: "default"
       // need enum to have categoryNames
+      //mosafiqrebelia tu name aris carieli rogor mieces default avtomaturad
     },
     createdBy: {
       type: mongoose.Types.ObjectId,

@@ -10,7 +10,7 @@ const getAllCategories = async (req, res) => {
   res.status(StatusCodes.OK).json({ categories, count: categories.length });
 };
 
-const createCategorie = async (req, res) => {
+const createCategory = async (req, res) => {
   // Unique category names for single person
   req.body.createdBy = req.user.userId;
   const category = await Categories.create(req.body);
@@ -18,6 +18,46 @@ const createCategorie = async (req, res) => {
 };
 
 // delete, update
+
+const updateCategory = async (req, res) => {
+  const {
+    body: { categoryName },
+    user: { userId },
+    params: { id: categoryId },
+  } = req;
+
+  if (categoryName === "") {
+    throw new BadRequestError("Fields cannot be empty");
+  }
+
+  const category = await Categories.findByIdAndUpdate(
+    { _id: categoryId, createdBy: userId },
+    req.body,
+    { new: true, runValidators: true }
+  );
+  if (!category) {
+    throw new NotFoundError(`No Category with this ${categoryId}`);
+  }
+  res.status(StatusCodes.OK).json({ category });
+};
+
+const deleteCategory = async (req, res) => {
+  const {
+    user: { userId },
+    params: { id: categoryId },
+  } = req;
+
+  const category = await Categories.findByIdAndDelete({
+    _id: categoryId,
+    createdBy: userId,
+  });
+
+  if (!category) {
+    throw new NotFoundError(`No Category with this id ${categoryId}`);
+  }
+  res.status(StatusCodes.OK).send("Category Has Been Deleted!");
+};
+
 
 const getAllFinances = async (req, res) => {
   const finances = await Finance.find({ createdBy: req.user.userId }).sort(
@@ -49,30 +89,28 @@ const createFinance = async (req, res) => {
 };
 const updateFinance = async (req, res) => {
   const {
-    body: { financeName, description, type, status, money, categorie },
+    body: { financeName, description, type, money,},
     user: { userId },
     params: { id: financeId },
   } = req;
 
-  if (description === "" || type === "") {
+  if (financeName === "" || description === "" || type === "" || money == "") {
     throw new BadRequestError("Fields cannot be empty");
   }
 
-  //mosafiqrebelia tu name aris carieli rogor mieces default avtomaturad
   const finance = await Finance.findByIdAndUpdate(
     { _id: financeId, createdBy: userId },
     req.body,
     { new: true, runValidators: true }
   );
   if (!finance) {
-    throw new NotFoundError(`No Finance with this ${financeId}`);
+    throw new NotFoundError(`No Finance with this id ${financeId}`);
   }
-  res.status(StatusCodes.OK).json({ finance });
+  res.status(StatusCodes.OK).send("Finance Has Been Updated!").json({ finance });
 };
 
 const deleteFinance = async (req, res) => {
   const {
-    body: { financeName, description, type, status, money, categorie },
     user: { userId },
     params: { id: financeId },
   } = req;
@@ -83,14 +121,16 @@ const deleteFinance = async (req, res) => {
   });
 
   if (!finance) {
-    throw new NotFoundError(`No Finance with this ${financeId}`);
+    throw new NotFoundError(`No Finance with this id ${financeId}`);
   }
-  res.status(StatusCodes.OK).send();
+  res.status(StatusCodes.OK).send("Finance Has Been Deleted!");
 };
 
 module.exports = {
   getAllCategories,
-  createCategorie,
+  createCategory,
+  deleteCategory,
+  updateCategory,
   getAllFinances,
   getFinance,
   createFinance,

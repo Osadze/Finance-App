@@ -7,12 +7,15 @@ const {
   createFinance,
   updateFinance,
   deleteFinance,
-  createCategorie,
+  createCategory,
   getAllCategories,
+  deleteCategory,
+  updateCategory
 } = require("../controllers/finances");
 
 router.route("/").post(createFinance).get(getAllFinances);
-router.route("/categories").post(createCategorie).get(getAllCategories);
+router.route("/categories").post(createCategory).get(getAllCategories);
+router.route("/categories/:id").delete(deleteCategory).patch(updateCategory);
 router.route("/:id").get(getFinance).delete(deleteFinance).patch(updateFinance);
 
 module.exports = router;
