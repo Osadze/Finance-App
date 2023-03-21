@@ -25,6 +25,7 @@
     "joi": "^17.8.4",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.2",
+    "nodemailer": "^6.9.1",
     "rate-limiter": "^0.2.0",
     "swagger-ui-express": "^4.6.2",
     "xss-clean": "^0.1.1",

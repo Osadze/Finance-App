@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 const { body, validationResult } = require("express-validator");
 // /droebit
 const { StatusCodes } = require("http-status-codes");
@@ -52,12 +52,52 @@ const postForgotPasswordLink = async (req, res) => {
     _id: user.id,
   };
 
-  const token = jwt.sign(payload, secret, { expiresIn: "5m" });
+  const token = jwt.sign(payload, secret, { expiresIn: "15m" });
   const oneTimeLink = `http://localhost:3000/api/v1/auth/reset-password/${user.id}/${token}`;
+
+  // SEND EMAIL
+
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_TEST,
+      pass: process.env.EMAIL_TEST_APP_PSW,
+    },
+  });
+
+  let message = {
+    from: '"Your Finances App" <testa65656@gmail.com>', // sender address
+    to: `${user.email}`, // list of receivers
+    subject: "Reset Your Password || Personal Finance App", // Subject line
+    // html: `<b>Visit This Link To </b><a href="${oneTimeLink}">Reset Password</a>`, // html body
+    html: `	<div style="max-width: 600px; margin: 0 auto; background-color: #f2f2f2; padding: 20px;">
+		<h1 style="text-align: center; color: #007bff;">Reset Password</h1>
+		<p style="text-align: center;">Please click on the link below to reset your password:</p>
+		<div style="text-align: center;">
+			<a href="${oneTimeLink}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+		</div>
+		<p style="text-align: center; margin-top: 20px;">If you did not request a password reset, please ignore this message.</p>
+	</div>`, // html body
+  };
+
+  transporter
+    .sendMail(message)
+    .then((info) => {
+      return res.status(StatusCodes.OK).json({
+        msg: "email recived",
+        previw: nodemailer.getTestMessageUrl(info),
+        link: oneTimeLink,
+      });
+    })
+    .catch((error) => {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+    });
+
   console.log(oneTimeLink, "Link");
-  res.status(StatusCodes.OK).json({ oneTimeLink, token });
+  // res.status(StatusCodes.OK).json({ oneTimeLink, token });
 };
-const getForgotPasswordLink = async (req, res) => {};
 const postResetedPassword = async (req, res) => {
   const { userId, token } = req.params;
   let { password1, password2 } = req.body;
@@ -80,8 +120,6 @@ const postResetedPassword = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-
-    password1 = await bcrypt.hash(password1, 10);
     user.password = password1;
 
     //TODO CLEANUP/////////////////////////////////////////////////////////
@@ -117,7 +155,6 @@ module.exports = {
   register,
   login,
   postForgotPasswordLink,
-  getForgotPasswordLink,
   postResetedPassword,
   getResetedPassword,
 };

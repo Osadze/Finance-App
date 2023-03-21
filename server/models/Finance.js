@@ -52,6 +52,4 @@ FinanceSchema.pre("save", function (next) {
   next();
 });
 
-
-
 module.exports = mongoose.model("Finance", FinanceSchema);
