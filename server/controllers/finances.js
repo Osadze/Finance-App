@@ -19,6 +19,29 @@ const createCategory = async (req, res) => {
 
 // delete, update
 
+// const updateCategory = async (req, res) => {
+//   const {
+//     user: { userId },
+//     params: { name: categoryName },
+//   } = req;
+
+//   if (categoryName === "") {
+//     throw new BadRequestError("Fields cannot be empty");
+//   }
+
+//   const category = await Categories.findOneAndUpdate(
+//     { categoryName: categoryName, createdBy: userId },
+//     req.body,
+//     { new: true, runValidators: true }
+//   );
+
+//   if (!category) {
+//     throw new NotFoundError(`No Category with this ${categoryName}`);
+//   }
+
+//   res.status(StatusCodes.OK).json({ category });
+// };
+
 const updateCategory = async (req, res) => {
   const {
     user: { userId },
@@ -29,15 +52,29 @@ const updateCategory = async (req, res) => {
     throw new BadRequestError("Fields cannot be empty");
   }
 
-  const category = await Categories.findOneAndUpdate(
-    { categoryName: categoryName, createdBy: userId },
-    req.body,
-    { new: true}
-  );
+  // find the category and update it
+  let category = await Categories.findOne({
+    categoryName: categoryName,
+    createdBy: userId,
+  });
 
   if (!category) {
-    throw new NotFoundError(`No Category with this ${categoryName}`);
+    throw new NotFoundError(
+      `No Category with Name: ${categoryName} For User '${userId}`
+    );
   }
+
+  // update the category fields
+  category.categoryName = req.body.categoryName || category.categoryName;
+
+  // validate the updated category
+  const validationError = category.validateSync();
+  if (validationError) {
+    throw new BadRequestError(validationError.message);
+  }
+
+  // save the updated category
+  category = await category.save();
 
   res.status(StatusCodes.OK).json({ category });
 };
