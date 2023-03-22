@@ -119,10 +119,50 @@ const deleteCategory = async (req, res) => {
 };
 
 const getAllFinances = async (req, res) => {
-  const finances = await Finance.find({ createdBy: req.user.userId }).sort(
-    "createdAt"
-  );
-  res.status(StatusCodes.OK).json({ finances, count: finances.length });
+  const { search, sort, financeName, money, type, status, category } =
+    req.query;
+
+  const query = {};
+
+  if (search) {
+    const regex = new RegExp(search, "i"); // "i" for case-insensitive
+    query.financeName = { $regex: regex };
+  }
+
+  if (type) {
+    query.type = type;
+  }
+
+  if (status) {
+    query.status = status;
+  }
+
+  if (money) {
+    query.money = { $lte: money };
+  }
+
+  let sortObj = { createdAt: -1 };
+  if (sort === "money_asc") {
+    sortObj = { money: 1 };
+  } else if (sort === "money_desc") {
+    sortObj = { money: -1 };
+  }
+
+  try {
+    const finances = await Finance.find({
+      createdBy: req.user.userId,
+      ...query,
+    })
+      .sort(sortObj)
+      .lean();
+
+    res.status(StatusCodes.OK).json({ finances, count: finances.length });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json("An error occurred while fetching the finances.");
+  }
 };
 
 const getFinance = async (req, res) => {
@@ -138,6 +178,7 @@ const getFinance = async (req, res) => {
   if (!finance) {
     throw new NotFoundError(`No Finance with this ${financeId}`);
   }
+
   res.status(StatusCodes.OK).json({ finance });
 };
 
@@ -188,15 +229,15 @@ const deleteFinance = async (req, res) => {
 // Search
 
 const getSearch = async (req, res) => {
-  let data = await Finance.find({
-    createdBy: req.user.userId,
-    // Only searches with financeNames and categories ones that are used in finances.
-    $or: [
-      { financeName: { $regex: (req.params.key, "i") } }, // "i" - For Search case-insensitivity
-      { category: { $regex: (req.params.key, "i") } },
-    ],
-  });
-  res.json(data);
+  // let data = await Finance.find({
+  //   createdBy: req.user.userId,
+  //   // Only searches with financeNames and categories ones that are used in finances.
+  //   $or: [
+  //     { financeName: { $regex: (req.params.key, "i") } }, // "i" - For Search case-insensitivity
+  //     { category: { $regex: (req.params.key, "i") } },
+  //   ],
+  // });
+  // res.json(data);
 };
 
 module.exports = {
