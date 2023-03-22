@@ -11,7 +11,7 @@ const CategoriesSchema = new mongoose.Schema(
         // Define a custom validator function for the categoryName field
         validator: async function (name) {
           // Use the findOne method of the Categories model to check for existing categories with the same name and createdBy
-          const existingCategory = await this.constructor.findOne({
+          const existingCategory = await mongoose.model('Categories').findOne({
             categoryName: name,
             createdBy: this.createdBy,
           });

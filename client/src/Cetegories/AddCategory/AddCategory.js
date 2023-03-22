@@ -27,6 +27,18 @@ function AddCategory(props) {
         .then((res) => {
           toast.success('Category Added', {
             position: "top-center",
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          props.setAddCategory(!props.addCategory);
+          props.setUpdateCategory(!props.updateCategory)
+        })
+        .catch((err) => {
+          toast.error('Category Already Exists', {
+            position: "top-center",
             autoClose: 700,
             hideProgressBar: false,
             closeOnClick: true,
@@ -35,12 +47,9 @@ function AddCategory(props) {
             progress: undefined,
             theme: "colored",
           });
-          setTimeout(() => {
-            props.setAddCategory(!props.addCategory);
-          }, 1000);
-          props.setUpdateCategory(!props.updateCategory)
-        })
-        .catch((err) => console.log(err));
+          console.log(err)
+        }
+        );
     }
   };
 

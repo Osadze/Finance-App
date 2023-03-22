@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 
 function UpdatePassword() {
   // eslint-disable-next-line
@@ -24,14 +25,21 @@ function UpdatePassword() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     axios
       .patch(
         `http://localhost:3000/api/v1/auth/reset-password/${userID}/${token}`,
         data
       )
       .then((res) => {
-        alert("Password Updated");
+        toast.success('Please Check Your Email', {
+          position: "top-center",
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
         navigate("/");
       })
       .catch((err) => {
@@ -40,6 +48,7 @@ function UpdatePassword() {
   };
   return (
     <div className="inputForm">
+      <ToastContainer />
       <ThemeProvider theme={darkTheme}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <p className="pSignIn">New Password</p>

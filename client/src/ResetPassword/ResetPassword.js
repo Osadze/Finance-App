@@ -5,6 +5,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from 'react-toastify';
+
 import axios from "axios";
 
 function ResetPassword() {
@@ -31,9 +33,28 @@ function ResetPassword() {
     axios
       .post("http://localhost:3000/api/v1/auth/forgot-password", data)
       .then((res) => {
-        alert("Email Sent");
+        toast.success('Please Check Your Email', {
+          position: "top-center",
+          autoClose: 700,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       })
       .catch((err) => {
+        toast.error('Account does not exist', {
+          position: "top-center",
+          autoClose: 700,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
         console.log(err)
       });
 
@@ -41,6 +62,8 @@ function ResetPassword() {
   };
   return (
     <div className="inputForm">
+      <ToastContainer />
+
       <ThemeProvider theme={darkTheme}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <p className="pSignIn">Reset Password</p>

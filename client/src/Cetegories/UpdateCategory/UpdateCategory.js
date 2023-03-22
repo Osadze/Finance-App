@@ -29,6 +29,20 @@ function UpdateCategory(props) {
                 .then((res) => {
                     toast.success('Updated', {
                         position: "top-center",
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                    props.setUpdateCategoryName(!props.updateCategoryName);
+                    props.setUpdateCategory(!props.updateCategory)
+                    props.setUpdateFinance(!props.updateFinance)
+                })
+                .catch((err) => {
+                    toast.error('Category Already Exists', {
+                        position: "top-center",
                         autoClose: 700,
                         hideProgressBar: false,
                         closeOnClick: true,
@@ -37,13 +51,9 @@ function UpdateCategory(props) {
                         progress: undefined,
                         theme: "colored",
                     });
-                    setTimeout(() => {
-                        props.setUpdateCategoryName(!props.updateCategoryName);
-                    }, 1000);
-                    props.setUpdateCategory(!props.updateCategory)
-                    props.setUpdateFinance(!props.updateFinance)
-                })
-                .catch((err) => console.log(err));
+                    console.log(err)
+                }
+                );
         }
     };
 

@@ -28,8 +28,8 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import AllFinance from "./AllFinance/AllFinance";
 import UpdateCategory from "./UpdateCategory/UpdateCategory";
+import SearchAndSort from "./SearchAndSort/SearchAndSort";
 
-const pages = ["Products", "Pricing", "Blog"];
 
 function Categories() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -63,7 +63,6 @@ function Categories() {
   }
   const DeleteCategory = (e) => {
     if (e.target.id) {
-      // console.log(e.target.id)
       axios
         .delete(
           `http://localhost:3000/api/v1/finances/categories/${e.target.id}`,
@@ -75,7 +74,7 @@ function Categories() {
           }
         )
         .then((res) => {
-          toast.error('Category Deleted', {
+          toast.success('Category Deleted', {
             position: "top-center",
             autoClose: 700,
             hideProgressBar: false,
@@ -88,7 +87,21 @@ function Categories() {
           setUpdateCategory(!updateCategory)
           setUpdateFinance(!updateFinance)
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          toast.error('Could Not Be Deleted', {
+            position: "top-center",
+            autoClose: 700,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          console.log(err)
+        }
+
+        );
     }
   }
 
@@ -217,7 +230,6 @@ function Categories() {
                       id={page._id}
                       onClick={(e) => { EditCategory(e) }}
                     />
-
                     <DeleteIcon
                       id={page.categoryName}
 
@@ -292,6 +304,7 @@ function Categories() {
             updateFinance={updateFinance}
           />
         )}
+        <SearchAndSort myCategories={myCategories}/>
         <AllFinance updateFinance={updateFinance} />
         <ToastContainer />
       </div>

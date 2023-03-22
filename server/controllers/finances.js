@@ -21,22 +21,21 @@ const createCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
   const {
-    body: { categoryName },
     user: { userId },
-    params: { id: categoryId },
+    params: { name: categoryName },
   } = req;
 
   if (categoryName === "") {
     throw new BadRequestError("Fields cannot be empty");
   }
 
-  const category = await Categories.findByIdAndUpdate(
-    { _id: categoryId, createdBy: userId },
+  const category = await Categories.findOneAndUpdate(
+    { categoryName: categoryName, createdBy: userId },
     req.body,
     { new: true, runValidators: true }
   );
   if (!category) {
-    throw new NotFoundError(`No Category with this ${categoryId}`);
+    throw new NotFoundError(`No Category with this ${categoryName}`);
   }
 
   res.status(StatusCodes.OK).json({ category });
@@ -48,7 +47,6 @@ const deleteCategory = async (req, res) => {
     params: { name: categoryName },
   } = req;
 
-  console.log(categoryName,'aaaaaaaaaaaaaaaaaaaaaa')
   const category = await Categories.findOneAndDelete({
     categoryName: categoryName,
     createdBy: userId,

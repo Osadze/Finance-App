@@ -68,6 +68,19 @@ function AddFinance(props) {
           .then((res) => {
             toast.success("Category Added", {
               position: "top-center",
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            props.setAddFinance(!props.addFinance);
+            props.setUpdateFinance(!props.updateFinance);
+          })
+          .catch((err) => {
+            toast.error("Something Went Wrong", {
+              position: "top-center",
               autoClose: 700,
               hideProgressBar: false,
               closeOnClick: true,
@@ -76,12 +89,8 @@ function AddFinance(props) {
               progress: undefined,
               theme: "colored",
             });
-            setTimeout(() => {
-              props.setAddFinance(!props.addFinance);
-            }, 1000);
-            props.setUpdateFinance(!props.updateFinance);
-          })
-          .catch((err) => console.log(err));
+            console.log(err)
+          });
       } else {
         axios
           .post(
