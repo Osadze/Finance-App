@@ -185,6 +185,20 @@ const deleteFinance = async (req, res) => {
   res.status(StatusCodes.OK).send("Finance Has Been Deleted!");
 };
 
+// Search
+
+const getSearch = async (req, res) => {
+  let data = await Finance.find({
+    createdBy: req.user.userId,
+    // Only searches with financeNames and categories ones that are used in finances.
+    $or: [
+      { financeName: { $regex: (req.params.key, "i") } }, // "i" - For Search case-insensitivity
+      { category: { $regex: (req.params.key, "i") } },
+    ],
+  });
+  res.json(data);
+};
+
 module.exports = {
   getAllCategories,
   createCategory,
@@ -195,4 +209,5 @@ module.exports = {
   createFinance,
   updateFinance,
   deleteFinance,
+  getSearch,
 };
