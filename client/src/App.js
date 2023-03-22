@@ -6,6 +6,7 @@ import ResetPassword from "./ResetPassword/ResetPassword";
 import * as themes from './assets/themes/darkTheme'
 import PageNotFound from "./PageNotFound/pageNotFound";
 import Categories from "./Cetegories/Categories";
+import UpdatePassword from "./ResetPassword/UpdatePassword";
 
 
 function App() {
@@ -28,8 +29,9 @@ function App() {
               <>
                 <Route path="/" excact element={<SignIn />} />
                 <Route path="/SignUp" element={<SignUp />} />
-                <Route path="/ResetPassword" element={<ResetPassword />} /></>
-
+                <Route path="/ResetPassword" element={<ResetPassword />} />
+                <Route path="/updatePassword/:userID/:token" element={<UpdatePassword />} />
+                </>
           }
           <Route path='*' element={<PageNotFound />} />
         </Routes>

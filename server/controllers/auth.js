@@ -23,12 +23,12 @@ const login = async (req, res) => {
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-
+  
+  // Check password
   const isPasswordCorrect = await user.checkPassword(password);
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-  // check password
 
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
@@ -53,9 +53,9 @@ const postForgotPasswordLink = async (req, res) => {
   };
 
   const token = jwt.sign(payload, secret, { expiresIn: "15m" });
-  const oneTimeLink = `http://localhost:3000/api/v1/auth/reset-password/${user.id}/${token}`;
+  const oneTimeLink = `http://localhost:3001/updatePassword/${user.id}/${token}`;
 
-  // SEND EMAIL
+  // Send email
 
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -71,7 +71,6 @@ const postForgotPasswordLink = async (req, res) => {
     from: '"Your Finances App" <testa65656@gmail.com>', // sender address
     to: `${user.email}`, // list of receivers
     subject: "Reset Your Password || Personal Finance App", // Subject line
-    // html: `<b>Visit This Link To </b><a href="${oneTimeLink}">Reset Password</a>`, // html body
     html: `	<div style="max-width: 600px; margin: 0 auto; background-color: #f2f2f2; padding: 20px;">
 		<h1 style="text-align: center; color: #007bff;">Reset Password</h1>
 		<p style="text-align: center;">Please click on the link below to reset your password:</p>
@@ -84,11 +83,9 @@ const postForgotPasswordLink = async (req, res) => {
 
   transporter
     .sendMail(message)
-    .then((info) => {
+    .then(() => {
       return res.status(StatusCodes.OK).json({
-        msg: "email recived",
-        previw: nodemailer.getTestMessageUrl(info),
-        link: oneTimeLink,
+        msg: `Reset Password Link Has Been Sent To Your Email ${user.email}`,
       });
     })
     .catch((error) => {
@@ -98,7 +95,7 @@ const postForgotPasswordLink = async (req, res) => {
   console.log(oneTimeLink, "Link");
   // res.status(StatusCodes.OK).json({ oneTimeLink, token });
 };
-const postResetedPassword = async (req, res) => {
+const updateResetedPassword = async (req, res) => {
   const { userId, token } = req.params;
   let { password1, password2 } = req.body;
   const user = await User.findOne({ _id: userId });
@@ -155,6 +152,6 @@ module.exports = {
   register,
   login,
   postForgotPasswordLink,
-  postResetedPassword,
+  updateResetedPassword,
   getResetedPassword,
 };

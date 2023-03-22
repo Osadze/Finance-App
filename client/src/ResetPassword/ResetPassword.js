@@ -1,15 +1,14 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
 import Link from "@mui/material/Link";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 function ResetPassword() {
   // eslint-disable-next-line
-  const [resetPasswordData, setResetPasswordData] = useState();
   let navigate = useNavigate();
   const noPointer = { cursor: "pointer" };
   function GoToSignIn() {
@@ -29,9 +28,16 @@ function ResetPassword() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    setResetPasswordData(data);
-    alert("Password Updated");
-    navigate("/");
+    axios
+      .post("http://localhost:3000/api/v1/auth/forgot-password", data)
+      .then((res) => {
+        alert("Email Sent");
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+
+
   };
   return (
     <div className="inputForm">
@@ -54,28 +60,8 @@ function ResetPassword() {
             helperText={errors?.email ? errors.email.message : null}
 
           />
-          <TextField
-            required
-            sx={{ mt: 1 }}
-            id="password"
-            label="New Password"
-            type="password"
-            variant="outlined"
-            autoComplete="current-password"
-               {...register("password", {
-              required: "Required field",
-              pattern: {
-                value: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-                message:
-                  "Invalid password It must be min 8 letter password, with at least a symbol, upper and lower case letters and a number",
-              },
-            })}
-            error={!!errors?.password}
-            helperText={errors?.password ? errors.password.message : null}
-          />
-
           <Button variant="contained" sx={{ mt: 2 }} endIcon={<LoginIcon />} type='submit'>
-            Change Password
+            Send
           </Button>
           <Link sx={{ mt: 2, mb: 2 }} onClick={GoToSignIn} style={noPointer}>
             Already have an account?
