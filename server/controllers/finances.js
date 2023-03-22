@@ -32,8 +32,9 @@ const updateCategory = async (req, res) => {
   const category = await Categories.findOneAndUpdate(
     { categoryName: categoryName, createdBy: userId },
     req.body,
-    { new: true, runValidators: true }
+    { new: true}
   );
+
   if (!category) {
     throw new NotFoundError(`No Category with this ${categoryName}`);
   }

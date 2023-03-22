@@ -178,7 +178,7 @@ function Categories() {
                       <Typography textAlign="center">
                         {page.categoryName}
                       </Typography>
-                      <EditIcon fontSize="small" onClick={(e) => { EditCategory(e) }} id={page._id} />
+                      <EditIcon fontSize="small" onClick={(e) => { EditCategory(e) }} id={page.categoryName} />
 
                       <DeleteIcon fontSize="small" onClick={(e) => DeleteCategory(e)} id={page.categoryName} />
                     </MenuItem>
@@ -227,7 +227,7 @@ function Categories() {
                         mt: 2.4,
                         p: 1,
                       }}
-                      id={page._id}
+                      id={page.categoryName}
                       onClick={(e) => { EditCategory(e) }}
                     />
                     <DeleteIcon

@@ -9,10 +9,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function UpdateCategory(props) {
     const [newCategory, setNewCategory] = useState("");
-
     let userData = JSON.parse(sessionStorage.user);
     const UpdateCategoryOnDB = (e) => {
         e.preventDefault();
+
         if (newCategory.length && sessionStorage.user && props.categoryIdForUpdate) {
             axios
                 .patch(

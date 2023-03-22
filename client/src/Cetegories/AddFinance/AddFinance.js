@@ -66,7 +66,7 @@ function AddFinance(props) {
             }
           )
           .then((res) => {
-            toast.success("Category Added", {
+            toast.success("Finance Added", {
               position: "top-center",
               hideProgressBar: false,
               closeOnClick: true,
