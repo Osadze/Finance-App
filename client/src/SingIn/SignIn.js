@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import "./styles/signIn.scss";
 import { useForm } from "react-hook-form";

@@ -6,12 +6,11 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 function UpdatePassword() {
   // eslint-disable-next-line
   let navigate = useNavigate();
-  const noPointer = { cursor: "pointer" };
   let { userID, token } = useParams();
   const darkTheme = createTheme({
     palette: {
@@ -31,7 +30,7 @@ function UpdatePassword() {
         data
       )
       .then((res) => {
-        toast.success('Please Check Your Email', {
+        toast.success("Please Check Your Email", {
           position: "top-center",
           hideProgressBar: false,
           closeOnClick: true,

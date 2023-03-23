@@ -119,8 +119,22 @@ const deleteCategory = async (req, res) => {
 };
 
 const getAllFinances = async (req, res) => {
-  const { search, sort, financeName, money, type, status, category } =
-    req.query;
+  const {
+    search,
+    sort,
+    money,
+    moneyMin,
+    moneyMax,
+    type,
+    status,
+    // category, for future
+    startDate,
+    endDate,
+  } = req.query;
+
+  // const formattedStartDate = startDate.toISOString().slice(0, 10);
+
+  console.log(startDate, endDate);
 
   const query = {};
 
@@ -141,12 +155,39 @@ const getAllFinances = async (req, res) => {
     query.money = { $lte: money };
   }
 
-  let sortObj = { createdAt: -1 };
-  if (sort === "money_asc") {
-    sortObj = { money: 1 };
-  } else if (sort === "money_desc") {
-    sortObj = { money: -1 };
+  // For Money and Date Range Filter
+
+  if (moneyMin && moneyMax) {
+    query.money = { $gte: Number(moneyMin), $lte: Number(moneyMax) };
+  } else if (moneyMin) {
+    query.money = { $gte: Number(moneyMin) };
+  } else if (moneyMax) {
+    query.money = { $lte: Number(moneyMax) };
   }
+
+  // error when choosing more than created at, min and max
+
+  if (startDate && endDate) {
+    query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+  } else if (startDate) {
+    query.createdAt = { $gte: new Date(startDate) };
+  }
+  if (endDate) {
+    query.createdAt = { $lte: new Date(endDate) };
+  }
+
+  const sortObj =
+    sort === "money_asc"
+      ? { money: 1 }
+      : sort === "money_desc"
+      ? { money: -1 }
+      : sort === "financeName_asc"
+      ? { financeName: 1 }
+      : sort === "financeName_desc"
+      ? { financeName: -1 }
+      : sort === "createdAt_asc"
+      ? { createdAt: 1 }
+      : { createdAt: -1 };
 
   try {
     const finances = await Finance.find({

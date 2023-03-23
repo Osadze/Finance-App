@@ -1,10 +1,37 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
-const initialState = {};
+const initialState = {
+  searchInput: "",
+  chosenComponents: {
+    type: "",
+    status: "",
+    valueRange: [],
+    finances: [],
+    startDate: '',
+    endDate: '',
+
+  },
+};
 
 const counterSlice = createSlice({
   name: "addingData",
   initialState,
-  reducers: {},
+  reducers: {
+    addSearchInput(state, action) {
+      state.searchInput = action.payload;
+    },
+    UpdateComponents(state, action) {
+      state.chosenComponents = action.payload;
+    },
+    addFinances(state, action) {
+      state.finances = action.payload;
+    },
+    addStartDate(state, action) {
+      state.startDate = action.payload;
+    },
+    addEndDate(state, action) {
+      state.endDate = action.payload;
+    },
+  },
 });
 
 const store = configureStore({

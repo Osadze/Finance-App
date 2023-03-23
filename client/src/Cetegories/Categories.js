@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import "./styles/categories.scss";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import {
   Box,
   AppBar,
@@ -30,7 +30,6 @@ import AllFinance from "./AllFinance/AllFinance";
 import UpdateCategory from "./UpdateCategory/UpdateCategory";
 import SearchAndSort from "./SearchAndSort/SearchAndSort";
 
-
 function Categories() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [myCategories, setMyCategories] = useState([]);
@@ -40,7 +39,6 @@ function Categories() {
   const [updateCategory, setUpdateCategory] = useState(false);
   const [updateCategoryName, setUpdateCategoryName] = useState(false);
   const [categoryIdForUpdate, setAddCategoryIdForUpdate] = useState("");
-
 
   const navigate = useNavigate();
   let userData = JSON.parse(sessionStorage.user);
@@ -57,10 +55,10 @@ function Categories() {
   };
   const EditCategory = (e) => {
     if (e.target.id) {
-      setUpdateCategoryName(!updateCategoryName)
-      setAddCategoryIdForUpdate(e.target.id)
+      setUpdateCategoryName(!updateCategoryName);
+      setAddCategoryIdForUpdate(e.target.id);
     }
-  }
+  };
   const DeleteCategory = (e) => {
     if (e.target.id) {
       axios
@@ -74,7 +72,7 @@ function Categories() {
           }
         )
         .then((res) => {
-          toast.success('Category Deleted', {
+          toast.success("Category Deleted", {
             position: "top-center",
             autoClose: 700,
             hideProgressBar: false,
@@ -84,11 +82,11 @@ function Categories() {
             progress: undefined,
             theme: "colored",
           });
-          setUpdateCategory(!updateCategory)
-          setUpdateFinance(!updateFinance)
+          setUpdateCategory(!updateCategory);
+          setUpdateFinance(!updateFinance);
         })
         .catch((err) => {
-          toast.error('Could Not Be Deleted', {
+          toast.error("Could Not Be Deleted", {
             position: "top-center",
             autoClose: 700,
             hideProgressBar: false,
@@ -98,13 +96,10 @@ function Categories() {
             progress: undefined,
             theme: "colored",
           });
-          console.log(err)
-        }
-
-        );
+          console.log(err);
+        });
     }
-  }
-
+  };
 
   useEffect(() => {
     axios
@@ -116,6 +111,7 @@ function Categories() {
       .then((res) => {
         setMyCategories(res.data.categories);
       });
+    // eslint-disable-next-line
   }, [updateCategory]);
 
   return (
@@ -178,9 +174,19 @@ function Categories() {
                       <Typography textAlign="center">
                         {page.categoryName}
                       </Typography>
-                      <EditIcon fontSize="small" onClick={(e) => { EditCategory(e) }} id={page.categoryName} />
+                      <EditIcon
+                        fontSize="small"
+                        onClick={(e) => {
+                          EditCategory(e);
+                        }}
+                        id={page.categoryName}
+                      />
 
-                      <DeleteIcon fontSize="small" onClick={(e) => DeleteCategory(e)} id={page.categoryName} />
+                      <DeleteIcon
+                        fontSize="small"
+                        onClick={(e) => DeleteCategory(e)}
+                        id={page.categoryName}
+                      />
                     </MenuItem>
                   ))}
                 </Menu>
@@ -228,11 +234,12 @@ function Categories() {
                         p: 1,
                       }}
                       id={page.categoryName}
-                      onClick={(e) => { EditCategory(e) }}
+                      onClick={(e) => {
+                        EditCategory(e);
+                      }}
                     />
                     <DeleteIcon
                       id={page.categoryName}
-
                       fontSize="small"
                       className="hoverBG"
                       onClick={(e) => DeleteCategory(e)}
@@ -262,7 +269,9 @@ function Categories() {
                 }}
                 variant="contained"
                 endIcon={<AddCircleOutlineIcon />}
-                onClick={(e) => { setAddFinance(!addFinance) }}
+                onClick={(e) => {
+                  setAddFinance(!addFinance);
+                }}
               >
                 Add Finance
               </Button>
@@ -276,16 +285,17 @@ function Categories() {
             </Toolbar>
           </Container>
         </AppBar>
-        {
-          updateCategoryName &&
-          <UpdateCategory categoryIdForUpdate={categoryIdForUpdate} setUpdateCategoryName={setUpdateCategoryName} updateCategoryName={updateCategoryName}
-
+        {updateCategoryName && (
+          <UpdateCategory
+            categoryIdForUpdate={categoryIdForUpdate}
+            setUpdateCategoryName={setUpdateCategoryName}
+            updateCategoryName={updateCategoryName}
             setUpdateCategory={setUpdateCategory}
             updateCategory={updateCategory}
             setUpdateFinance={setUpdateFinance}
             updateFinance={updateFinance}
           />
-        }
+        )}
         {addCategory && (
           <AddCategory
             setAddCategory={setAddCategory}
@@ -304,7 +314,11 @@ function Categories() {
             updateFinance={updateFinance}
           />
         )}
-        <SearchAndSort myCategories={myCategories}/>
+        <SearchAndSort
+          myCategories={myCategories}
+          setUpdateFinance={setUpdateFinance}
+          updateFinance={updateFinance}
+        />
         <AllFinance updateFinance={updateFinance} />
         <ToastContainer />
       </div>
