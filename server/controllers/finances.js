@@ -56,7 +56,6 @@ const updateCategory = async (req, res) => {
 
   for (const finance of finances) {
     const updatedCategory = req.body.categoryName;
-    console.log(categoryName, ",", updatedCategory);
 
     if (updatedCategory !== categoryName) {
       // Remove the old category from the finance's category list
