@@ -11,6 +11,7 @@ import {
   Menu,
   Container,
   Button,
+  // TextField,
   MenuItem,
 } from "@mui/material";
 
@@ -314,11 +315,18 @@ function Categories() {
             updateFinance={updateFinance}
           />
         )}
+
+
         <SearchAndSort
           myCategories={myCategories}
           setUpdateFinance={setUpdateFinance}
           updateFinance={updateFinance}
         />
+
+{/* <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} /> */}
+
+
+
         <AllFinance updateFinance={updateFinance} />
         <ToastContainer />
       </div>

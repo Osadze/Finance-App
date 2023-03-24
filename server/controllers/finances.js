@@ -11,36 +11,12 @@ const getAllCategories = async (req, res) => {
 };
 
 const createCategory = async (req, res) => {
-  // Unique category names for single person
   req.body.createdBy = req.user.userId;
   const category = await Categories.create(req.body);
   res.status(StatusCodes.CREATED).json({ category });
 };
 
-// delete, update
-
-// const updateCategory = async (req, res) => {
-//   const {
-//     user: { userId },
-//     params: { name: categoryName },
-//   } = req;
-
-//   if (categoryName === "") {
-//     throw new BadRequestError("Fields cannot be empty");
-//   }
-
-//   const category = await Categories.findOneAndUpdate(
-//     { categoryName: categoryName, createdBy: userId },
-//     req.body,
-//     { new: true, runValidators: true }
-//   );
-
-//   if (!category) {
-//     throw new NotFoundError(`No Category with this ${categoryName}`);
-//   }
-
-//   res.status(StatusCodes.OK).json({ category });
-// };
+// Update Delete
 
 const updateCategory = async (req, res) => {
   const {
@@ -52,7 +28,7 @@ const updateCategory = async (req, res) => {
     throw new BadRequestError("Fields cannot be empty");
   }
 
-  // find the category and update it
+  // Find the category and update it
   let category = await Categories.findOne({
     categoryName: categoryName,
     createdBy: userId,
@@ -67,13 +43,13 @@ const updateCategory = async (req, res) => {
   // update the category fields
   category.categoryName = req.body.categoryName || category.categoryName;
 
-  // validate the updated category
+  // Validate the updated category
   const validationError = category.validateSync();
   if (validationError) {
     throw new BadRequestError(validationError.message);
   }
 
-  // save the updated category
+  // Save the updated category
   category = await category.save();
 
   res.status(StatusCodes.OK).json({ category });
@@ -101,7 +77,7 @@ const deleteCategory = async (req, res) => {
   for (const finance of finances) {
     const categoryIds = finance.category;
 
-    // Check if the array only contains the deleted category ID
+    // Check if the array only contains the deleted category ID and Set "Default" as a category name
     if (categoryIds.length === 1 && categoryIds[0] === categoryName) {
       finance.category = ["Default"];
     } else {
@@ -112,7 +88,7 @@ const deleteCategory = async (req, res) => {
       }
       finance.category = categoryIds;
     }
-
+    // Save the updated finance
     await finance.save();
   }
   res.status(StatusCodes.OK).send("Category Has Been Deleted!");
@@ -127,21 +103,20 @@ const getAllFinances = async (req, res) => {
     moneyMax,
     type,
     status,
-    // category, for future
     startDate,
     endDate,
   } = req.query;
 
-  // const formattedStartDate = startDate.toISOString().slice(0, 10);
-
-  console.log("start", startDate, "end", endDate);
-
   const query = {};
+
+  // Search by financeName
 
   if (search) {
     const regex = new RegExp(search, "i"); // "i" for case-insensitive
     query.financeName = { $regex: regex };
   }
+
+  // Filter by type and status
 
   if (type) {
     query.type = type;
@@ -152,7 +127,7 @@ const getAllFinances = async (req, res) => {
   }
 
   if (money) {
-    query.money = { $lte: money };
+    query.money = { $lte: money }; // For sorting by money
   }
 
   // For Money and Date Range Filter
@@ -164,8 +139,6 @@ const getAllFinances = async (req, res) => {
   } else if (moneyMax) {
     query.money = { $lte: Number(moneyMax) };
   }
-
-  // error when choosing more than created at, min and max
 
   if (startDate && endDate) {
     const start = new Date(startDate);
@@ -180,6 +153,8 @@ const getAllFinances = async (req, res) => {
   } else if (endDate) {
     query.createdAt = { $lte: new Date(endDate) };
   }
+
+  // Sort by money, name and create time
 
   const sortObj =
     sort === "money_asc"
@@ -272,20 +247,6 @@ const deleteFinance = async (req, res) => {
   res.status(StatusCodes.OK).send("Finance Has Been Deleted!");
 };
 
-// Search
-
-const getSearch = async (req, res) => {
-  // let data = await Finance.find({
-  //   createdBy: req.user.userId,
-  //   // Only searches with financeNames and categories ones that are used in finances.
-  //   $or: [
-  //     { financeName: { $regex: (req.params.key, "i") } }, // "i" - For Search case-insensitivity
-  //     { category: { $regex: (req.params.key, "i") } },
-  //   ],
-  // });
-  // res.json(data);
-};
-
 module.exports = {
   getAllCategories,
   createCategory,
@@ -296,5 +257,4 @@ module.exports = {
   createFinance,
   updateFinance,
   deleteFinance,
-  getSearch,
 };

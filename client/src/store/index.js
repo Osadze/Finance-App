@@ -4,10 +4,11 @@ const initialState = {
   chosenComponents: {
     type: "",
     status: "",
-    valueRange: [],
     finances: [],
     startDate: '',
     endDate: '',
+    valueRangeMin: "",
+    valueRangeMax: "",
 
   },
 };

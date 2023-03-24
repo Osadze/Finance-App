@@ -30,7 +30,6 @@ function SignIn() {
         .post("http://localhost:3000/api/v1/auth/login", { email, password })
         .then((res) => {
           if (res.data.user) {
-            console.log(res.data);
             setUserError("");
             navigate(0);
             sessionStorage.setItem("user", JSON.stringify(res.data));

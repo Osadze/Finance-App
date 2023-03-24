@@ -2,7 +2,6 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { body, validationResult } = require("express-validator");
-// /droebit
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
@@ -23,7 +22,7 @@ const login = async (req, res) => {
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-  
+
   // Check password
   const isPasswordCorrect = await user.checkPassword(password);
   if (!isPasswordCorrect) {
@@ -36,6 +35,7 @@ const login = async (req, res) => {
 
 const postForgotPasswordLink = async (req, res) => {
   const { email } = req.body;
+  const refererUrl = req.get("referer");
   if (!email) {
     throw new BadRequestError("Please Provide Email");
   }
@@ -53,7 +53,7 @@ const postForgotPasswordLink = async (req, res) => {
   };
 
   const token = jwt.sign(payload, secret, { expiresIn: "15m" });
-  const oneTimeLink = `http://localhost:3001/updatePassword/${user.id}/${token}`;
+  const oneTimeLink = `${refererUrl}updatePassword/${user.id}/${token}`;
 
   // Send email
 
@@ -68,8 +68,8 @@ const postForgotPasswordLink = async (req, res) => {
   });
 
   let message = {
-    from: '"Your Finances App" <testa65656@gmail.com>', // sender address
-    to: `${user.email}`, // list of receivers
+    from: '"Your Finances App" <noreply@TestfinanceApp.com>', // Sender address
+    to: `${user.email}`, // List of receivers
     subject: "Reset Your Password || Personal Finance App", // Subject line
     html: `	<div style="max-width: 600px; margin: 0 auto; background-color: #f2f2f2; padding: 20px;">
 		<h1 style="text-align: center; color: #007bff;">Reset Password</h1>
@@ -91,9 +91,6 @@ const postForgotPasswordLink = async (req, res) => {
     .catch((error) => {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     });
-
-  console.log(oneTimeLink, "Link");
-  // res.status(StatusCodes.OK).json({ oneTimeLink, token });
 };
 const updateResetedPassword = async (req, res) => {
   const { userId, token } = req.params;
@@ -119,7 +116,6 @@ const updateResetedPassword = async (req, res) => {
     }
     user.password = password1;
 
-    //TODO CLEANUP/////////////////////////////////////////////////////////
     await user.save();
     res
       .status(StatusCodes.OK)

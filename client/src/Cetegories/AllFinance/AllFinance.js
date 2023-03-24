@@ -70,8 +70,8 @@ function AllFinance(props) {
         }&startDate=${startDate ? startDate : ""}&endDate=${
           endDate ? endDate : ""
         }&moneyMin=${
-          components.valueRange[0] ? components.valueRange[0] : ""
-        }&moneyMax=${components.valueRange[1] ? components.valueRange[1] : ""}`,
+          components.valueRangeMin ? components.valueRangeMin: ""
+        }&moneyMax=${components.valueRangeMax ? components.valueRangeMax : ""}`,
         {
           headers: {
             Authorization: "Bearer " + userData.token,

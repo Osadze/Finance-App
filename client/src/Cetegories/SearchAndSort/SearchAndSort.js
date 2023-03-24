@@ -5,25 +5,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import { useState, useEffect } from "react";
 import FormControl from "@mui/material/FormControl";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { counterActions } from "../../store/index";
-import {
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  FormLabel,
-  Slider,
-} from "@mui/material";
+import { FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-function valuetext(value) {
-  return `${value}°C`;
-}
-
-const minDistance = 10;
-
 function SearchAndSort(props) {
   const [serchText, setSearchText] = useState("");
   const dispatch = useDispatch();
@@ -31,18 +18,11 @@ function SearchAndSort(props) {
   const [components, setComponents] = useState({
     type: "",
     status: "",
-    valueRange: [0, 100000],
+    valueRangeMin: "",
+    valueRangeMax: "",
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
-  const finances = useSelector((state) => state.finances);
-  let k = Math.max.apply(
-    Math,
-    finances?.map(function (o) {
-      return o.money;
-    })
-  );
 
   function SearchItem() {
     props.setUpdateFinance(!props.updateFinance);
@@ -79,28 +59,7 @@ function SearchAndSort(props) {
   }, [components]);
 
   //value picker
-  const handleChange2 = (event, newValue, activeThumb) => {
-    if (!Array.isArray(newValue)) {
-      return;
-    }
-    if (newValue[1] - newValue[0] < minDistance) {
-      if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 100 - minDistance);
-        setComponents({
-          ...components,
-          valueRange: [clamped, clamped + minDistance],
-        });
-      } else {
-        const clamped = Math.max(newValue[1], minDistance);
-        setComponents({
-          ...components,
-          valueRange: [clamped - minDistance, clamped],
-        });
-      }
-    } else {
-      setComponents({ ...components, valueRange: newValue });
-    }
-  };
+
   return (
     <Box
       component="form"
@@ -203,18 +162,30 @@ function SearchAndSort(props) {
         )}
       </div>
 
-      <Box sx={{ width: 300 }} style={{ marginRight: "100px" }}>
-        <FormLabel id="range">choose value range</FormLabel>
-        <Slider
-          getAriaLabel={() => "Minimum distance shift"}
-          value={components.valueRange}
-          onChange={handleChange2}
-          valueLabelDisplay="auto"
-          getAriaValueText={valuetext}
-          disableSwap
-          max={k}
+      <div
+        component="form"
+        style={{ display: "flex", flexDirection: "column", gap: 10 }}
+        noValidate
+        autoComplete="off"
+      >
+        <FormLabel id="range">choose money range</FormLabel>
+        <TextField
+          id="outlined-range"
+          label="Min"
+          onChange={(e) =>
+            setComponents({ ...components, valueRangeMin: e.target.value })
+          }
+          variant="outlined"
         />
-      </Box>
+        <TextField
+          id="outlined-basic"
+          label="Max"
+          variant="outlined"
+          onChange={(e) =>
+            setComponents({ ...components, valueRangeMax: e.target.value })
+          }
+        />
+      </div>
 
       <DatePicker
         selected={startDate}
