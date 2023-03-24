@@ -52,6 +52,26 @@ const updateCategory = async (req, res) => {
   // Save the updated category
   category = await category.save();
 
+  const finances = await Finance.find({ category: categoryName });
+
+  for (const finance of finances) {
+    const updatedCategory = req.body.categoryName;
+    console.log(categoryName, ",", updatedCategory);
+
+    if (updatedCategory !== categoryName) {
+      // Remove the old category from the finance's category list
+      const index = finance.category.indexOf(categoryName);
+      if (index > -1) {
+        finance.category.splice(index, 1);
+      }
+
+      // Add the updated category to the finance's category list
+      finance.category.push(updatedCategory);
+    }
+
+    // Save the updated finance
+    await finance.save();
+  }
   res.status(StatusCodes.OK).json({ category });
 };
 

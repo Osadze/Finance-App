@@ -138,7 +138,7 @@ function Categories() {
                   textDecoration: "none",
                 }}
               >
-                LOGO
+                Categories
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -209,7 +209,7 @@ function Categories() {
                   textDecoration: "none",
                 }}
               >
-                LOGO
+                Categories
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 {myCategories?.map((page, index) => (
@@ -316,16 +316,13 @@ function Categories() {
           />
         )}
 
-
         <SearchAndSort
           myCategories={myCategories}
           setUpdateFinance={setUpdateFinance}
           updateFinance={updateFinance}
         />
 
-{/* <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} /> */}
-
-
+        {/* <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} /> */}
 
         <AllFinance updateFinance={updateFinance} />
         <ToastContainer />
