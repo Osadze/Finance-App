@@ -134,7 +134,7 @@ const getAllFinances = async (req, res) => {
 
   // const formattedStartDate = startDate.toISOString().slice(0, 10);
 
-  console.log(startDate, endDate);
+  console.log("start", startDate, "end", endDate);
 
   const query = {};
 
@@ -168,11 +168,16 @@ const getAllFinances = async (req, res) => {
   // error when choosing more than created at, min and max
 
   if (startDate && endDate) {
-    query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (start.getTime() === end.getTime()) {
+      // If the start and end dates are equal, add one day to the end date
+      end.setDate(end.getDate() + 1);
+    }
+    query.createdAt = { $gte: start, $lte: end };
   } else if (startDate) {
     query.createdAt = { $gte: new Date(startDate) };
-  }
-  if (endDate) {
+  } else if (endDate) {
     query.createdAt = { $lte: new Date(endDate) };
   }
 
