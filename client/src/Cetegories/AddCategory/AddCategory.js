@@ -14,7 +14,7 @@ function AddCategory(props) {
     if (categoryName.length && sessionStorage.user) {
       axios
         .post(
-          "http://localhost:3000/api/v1/finances/categories",
+          "http://localhost:3001/api/v1/finances/categories",
           {
             categoryName: categoryName,
           },

@@ -31,7 +31,7 @@ function ResetPassword() {
   } = useForm();
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:3000/api/v1/auth/forgot-password", data)
+      .post("http://localhost:3001/api/v1/auth/forgot-password", data)
       .then((res) => {
         toast.success('Please Check Your Email', {
           position: "top-center",

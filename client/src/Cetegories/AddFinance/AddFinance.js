@@ -49,7 +49,7 @@ function AddFinance(props) {
       if (values.financeType === "outcome") {
         axios
           .post(
-            "http://localhost:3000/api/v1/finances",
+            "http://localhost:3001/api/v1/finances",
             {
               financeName: values.financeName,
               description: values.financeDescription,
@@ -94,7 +94,7 @@ function AddFinance(props) {
       } else {
         axios
           .post(
-            "http://localhost:3000/api/v1/finances",
+            "http://localhost:3001/api/v1/finances",
             {
               financeName: values.financeName,
               description: values.financeDescription,

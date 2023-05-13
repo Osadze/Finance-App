@@ -16,7 +16,7 @@ function UpdateCategory(props) {
         if (newCategory.length && sessionStorage.user && props.categoryIdForUpdate) {
             axios
                 .patch(
-                    `http://localhost:3000/api/v1/finances/categories/${props.categoryIdForUpdate}`,
+                    `http://localhost:3001/api/v1/finances/categories/${props.categoryIdForUpdate}`,
                     {
                         categoryName: newCategory,
                     },

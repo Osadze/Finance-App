@@ -64,7 +64,7 @@ function Categories() {
     if (e.target.id) {
       axios
         .delete(
-          `http://localhost:3000/api/v1/finances/categories/${e.target.id}`,
+          `http://localhost:3001/api/v1/finances/categories/${e.target.id}`,
 
           {
             headers: {
@@ -104,7 +104,7 @@ function Categories() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/finances/categories", {
+      .get("http://localhost:3001/api/v1/finances/categories", {
         headers: {
           Authorization: "Bearer " + userData.token,
         },

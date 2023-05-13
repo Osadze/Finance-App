@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { UnauthenticatedError } = require("../errors");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -28,6 +29,8 @@ const UserSchema = new mongoose.Schema({
 
 // Define a pre-hook to hash the password before saving the user to the database
 UserSchema.pre("save", async function () {
+
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });

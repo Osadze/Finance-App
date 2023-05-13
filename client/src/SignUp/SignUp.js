@@ -19,9 +19,10 @@ function SignUp() {
   const onSubmit = (data) => {
     if (data) {
       axios
-        .post("http://localhost:3000/api/v1/auth/register", data)
+        .post("http://localhost:3001/api/v1/auth/register", data)
         .then((res) => {
           navigate("/");
+          alert("New User Created!")
         })
         .catch((err) => {
           setErr("User Already Exists");
@@ -79,7 +80,7 @@ function SignUp() {
           {...register("password", {
             required: "Required field",
             pattern: {
-              value: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
               message:
                 "Invalid password It must be min 8 letter, with at least a symbol, upper and lower case letters and a number",
             },

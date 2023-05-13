@@ -63,7 +63,7 @@ function AllFinance(props) {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:3000/api/v1/finances?search=${
+        `http://localhost:3001/api/v1/finances?search=${
           searchInput ? searchInput : ""
         }&type=${components.type ? components.type : components.type}&status=${
           components.status ? components.status : ""

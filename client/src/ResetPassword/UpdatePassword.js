@@ -26,7 +26,7 @@ function UpdatePassword() {
   const onSubmit = (data) => {
     axios
       .patch(
-        `http://localhost:3000/api/v1/auth/reset-password/${userID}/${token}`,
+        `http://localhost:3001/api/v1/auth/reset-password/${userID}/${token}`,
         data
       )
       .then((res) => {

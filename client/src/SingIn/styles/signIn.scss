@@ -4,23 +4,66 @@
   align-items: center;
 }
 
-.inputForm {
+.login__wrapper {
   width: 100%;
   height: 100vh;
-  background-color: #1A2027;
+  background-color: #f1f1f1;
 
   @include flexCenter;
 
-  form {
-    width: 25%;
-    min-height: 400px;
-    background-color: #37437e;
+  .login__container {
+    width: 75vw;
+    padding: 50px;
     @include flexCenter;
-    flex-direction: column;
-    border-radius: 25px;
+    .img__background {
+      width: 50%;
+      display: block;
+      aspect-ratio: 1;
+      background-position: left;
+      background-size: cover;
+      @media (max-width: 800px ) {
+        display: none;
+      
+      }
+
+      background-image: url("../../assets/img/login.png");
+    }
+    form {
+      width: 50%;
+      aspect-ratio: 1;
+      background-color: #ffffff;
+      @include flexCenter;
+      flex-direction: column;
+      @media (max-width: 800px ) {
+        width: 100vw;
+      }
+
+      button {
+        background-color: #7F8CFA;
+      }
+      a {
+        color: #000;
+      }
+    }
+    .pSignIn {
+      font-size: 1.6rem;
+      font-family: calibri;
+      color: rgb(0, 0, 0);
+    }
+
+    @media (max-width: 1200px ) {
+      width: 90vw;
+    }
+    @media (max-width: 800px ) {
+      flex-direction: column;
+      width: 100vw;
+      overflow: hidden;
+
+    }
   }
-  .pSignIn {
-    font-size: 1.6rem;
-    color: white;
+
+  @media (max-width: 800px ) {
+    background-color: #ffffff ;
+
   }
 }

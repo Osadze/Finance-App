@@ -97,7 +97,7 @@ const updateResetedPassword = async (req, res) => {
   let { password1, password2 } = req.body;
   const user = await User.findOne({ _id: userId });
   if (!user || user._id != userId) {
-    throw new UnauthenticatedError("Invalid Credentials 1");
+    throw new UnauthenticatedError("Invalid Credentials");
   }
   const secret = process.env.JWT_PASW + user.password;
 
@@ -120,9 +120,10 @@ const updateResetedPassword = async (req, res) => {
     res
       .status(StatusCodes.OK)
       .json({ message: "working", password: user.password });
+      console.log("working");
   } catch (error) {
     console.log(error);
-    throw new UnauthenticatedError("Invalid Credentials 2");
+    throw new UnauthenticatedError("Invalid Credentials");
   }
 };
 
@@ -131,7 +132,7 @@ const getResetedPassword = async (req, res) => {
 
   const user = await User.findOne({ _id: userId });
   if (!user || user._id != userId) {
-    throw new UnauthenticatedError("Invalid Credentials 1");
+    throw new UnauthenticatedError("Invalid Credentials");
   }
   const secret = process.env.JWT_PASW + user.password;
 
@@ -140,7 +141,7 @@ const getResetedPassword = async (req, res) => {
     res.status(StatusCodes.OK).json({ message: "working", email: user.email });
   } catch (error) {
     console.log(error);
-    throw new UnauthenticatedError("Invalid Credentials 2");
+    throw new UnauthenticatedError("Invalid Credentials");
   }
 };
 

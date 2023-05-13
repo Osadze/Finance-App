@@ -27,7 +27,7 @@ function SignIn() {
     if (data) {
       let { email, password } = data;
       axios
-        .post("http://localhost:3000/api/v1/auth/login", { email, password })
+        .post("http://localhost:3001/api/v1/auth/login", { email, password })
         .then((res) => {
           if (res.data.user) {
             setUserError("");
@@ -44,71 +44,73 @@ function SignIn() {
   };
 
   return (
-    <div className="inputForm">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <p className="pSignIn">Sign In</p>
-        <muiSignIn.TextField
-          required
-          sx={{ mt: 1, width: "80%" }}
-          id="email"
-          label="Email"
-          variant="outlined"
-          {...register("email", {
-            required: "Required field",
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Invalid email address",
-            },
-          })}
-          error={!!errors?.email}
-          helperText={errors?.email ? errors.email.message : null}
-        />
-        <muiSignIn.TextField
-          required
-          sx={{ mt: 1, width: "80%" }}
-          id="password"
-          label="Password"
-          type="password"
-          variant="outlined"
-          autoComplete="current-password"
-          {...register("password", {
-            required: "Required field",
-            pattern: {
-              value: /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-              message:
-                "Invalid password It must be min 8 letter password, with at least a symbol, upper and lower case letters and a number",
-            },
-          })}
-          error={!!errors?.password}
-          helperText={errors?.password ? errors.password.message : null}
-        />
-        {userError?.length && (
-          <muiSignIn.Alert severity="error" sx={{ mt: 2 }}>
-            {userError}
-          </muiSignIn.Alert>
-        )}
+    <div className="login__wrapper">
+      <div className="login__container">
+        <div className="img__background"></div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <p className="pSignIn">Sign in</p>
+          <muiSignIn.TextField
+            required
+            sx={{ mt: 1, width: "80%" }}
+            id="email"
+            label="Email"
+            variant="outlined"
+            {...register("email", {
+              required: "Required field",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email or password",
+              },
+            })}
+            error={!!errors?.email}
+            helperText={errors?.email ? errors.email.message : null}
+          />
+          <muiSignIn.TextField
+            required
+            sx={{ mt: 1, width: "80%" }}
+            id="password"
+            label="Password"
+            type="password"
+            variant="outlined"
+            autoComplete="current-password"
+            {...register("password", {
+              required: "Required field",
+              pattern: {
+                value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                message: "Invalid email or password",
+              },
+            })}
+            error={!!errors?.password}
+            helperText={errors?.password ? errors.password.message : null}
+          />
+          {userError?.length && (
+            <muiSignIn.Alert severity="error" sx={{ mt: 2 }}>
+              {userError}
+            </muiSignIn.Alert>
+          )}
 
-        <muiSignIn.Button
-          variant="contained"
-          sx={{ mt: 2 }}
-          endIcon={<muiSignIn.LoginIcon />}
-          type="submit"
-        >
-          Sign In
-        </muiSignIn.Button>
+          <muiSignIn.Button
+            variant="contained"
+            sx={{ mt: 2 }}
+            endIcon={<muiSignIn.LoginIcon />}
+            type="submit"
+          >
+            Sign In
+          </muiSignIn.Button>
 
-        <muiSignIn.Link sx={{ mt: 2 }} onClick={GoToSignUp} style={noPointer}>
-          Do Not have an account?
-        </muiSignIn.Link>
+          <muiSignIn.Link sx={{ mt: 2 }} onClick={GoToSignUp} style={noPointer}>
+            Do Not have an account?
+          </muiSignIn.Link>
 
-        <muiSignIn.Link
-          sx={{ mt: 2 }}
-          style={noPointer}
-          onClick={GoToResetPassword}
-        >
-          Reset Password
-        </muiSignIn.Link>
-      </form>
+          <muiSignIn.Link
+            sx={{ mt: 2 }}
+            style={noPointer}
+            onClick={GoToResetPassword}
+          >
+            Reset Password
+          </muiSignIn.Link>
+        </form>
+      </div>
     </div>
   );
 }
